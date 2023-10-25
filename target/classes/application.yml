@@ -1,0 +1,25 @@
+server:
+  port: 8080
+spring:
+  #数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/yingchao?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+  thymeleaf:
+    cache: false #缓存
+    encoding: UTF-8 #编码格式
+    suffix: .html #后缀
+    prefix: classpath:/templates/ #前缀
+    mode: HTML #模板
+    servlet:
+      content-type: text/html #servler文本
+  mvc:
+    static-path-pattern: /static/**  #加载静态资源
+  redis:
+    host: 127.0.0.1           #地址
+    port: 6379                #端口号
+mybatis:
+  type-aliases-package: org.example.pojo
+  mapper-locations: mapper/*Mapper.xml

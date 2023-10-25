@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<center>
+  <form th:action="@{/players/add}" method="post">
+    <table border="1">
+      <tr>
+        <td>姓名：</td>
+        <td>
+          <input type="text" name="pname">
+        </td>
+      </tr>
+      <tr>
+        <td>出生时间：</td>
+        <td>
+          <input type="text" name="birthday">
+        </td>
+      </tr>
+      <tr>
+        <td>球员身高：</td>
+        <td>
+          <input type="text" name="height">
+        </td>
+      </tr>
+      <tr>
+        <td>球员体重：</td>
+        <td>
+          <input type="text" name="weight">
+        </td>
+      </tr>
+      <tr>
+        <td>球员位置：</td>
+        <td>
+          <input type="radio" name="position" value="门将">门将
+          <input type="radio" name="position" value="后卫">后卫
+          <input type="radio" name="position" value="中场">中场
+          <input type="radio" name="position" value="前锋">前锋
+        </td>
+      </tr>
+      <tr>
+        <td>球队：</td>
+        <td>
+          <select id="cid" name="cid">
+            <option value="0">--请选择--</option>
+            <option th:each="clubs:${list}" th:value="${clubs.cid}" th:text="${clubs.cname}"></option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="button" value="添加" onclick="add()">
+          <input type="button" value="重置">
+        </td>
+      </tr>
+    </table>
+  </form>
+  <script src="/static/js/jquery-1.12.4.js"></script>
+  <script type="text/javascript">
+    function add(){
+      var $infos=$("form").find(":input");//获取所有表单元素
+      var array=$infos.serializeArray();//将表单元素编码成数组格式
+      var stringInfos=$.param(array);//数组序列化成字符串
+      $.ajax({
+        url:"/players/add",
+        data:stringInfos,
+        dataType:"text",
+        type:"post",
+        success:function (result){
+          if (result=="true"){
+            alert("添加成功！");
+            location.href="/players/select";
+          }else {
+            alert("添加失败！");
+          }
+        }
+      });
+    }
+  </script>
+</center>
+</body>
+</html>

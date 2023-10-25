@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/" xmlns:c="http://www.w3.org/1999/XSL/Transform">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    tr:nth-of-type(odd){
+      background: lightblue;
+    }
+  </style>
+  <script type="text/javascript" src="/static/js/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript">
+    function del(pid){
+      var flag = confirm("确定要删除吗？");
+      if(flag){
+        $.ajax({
+          url:"/players/delete",
+          dataType:"text",
+          data:{"pid":pid},
+          type:"post",
+          success:function(result) {
+            if(result=="true"){
+              alert("删除成功！");
+              location.href="/players/select";
+            }else {
+              alert("删除失败！");
+            }
+          }
+        });
+      }else {
+        alert("您已取消该操作！");
+      }
+    }
+  </script>
+  <script type="text/javascript">
+    function add(){
+      location.href="/players/toAdd";
+    }
+  </script>
+</head>
+<body>
+<div align="center" width="800">
+  <h1>英格兰足球超级联赛球员信息</h1>
+  <form method="post" th:href="@{'/players/select'}">
+    <span>球员姓名：<input type="text" name="pname" id="pname"></span>
+    所属球队：
+    <select id="cid" name="cid">
+      <option value="0">--请选择--</option>
+      <option th:each="clubs:${clubsList}" th:value="${clubs.cid}" th:text="${clubs.cname}"></option>
+    </select>
+    <input type="submit" value="提交">
+  </form>
+  <table border="1">
+    <tr>
+      <th>球员编号</th>
+      <th>球员名称</th>
+      <th>出生时间(yyyy-MM-dd)</th>
+      <th>球员身高(单位:cm)</th>
+      <th>球员体重(单位:kg)</th>
+      <th>球员位置</th>
+      <th>球员所属球队</th>
+      <th>相关操作</th>
+    </tr>
+    <tr th:each="players:${pageBean.lists}">
+      <td th:text="${players.pid}"></td>
+      <td th:text="${players.pname}"></td>
+      <td th:text="${#dates.format(players.birthday,'yyyy-MM-dd')}"></td>
+      <td th:text="${players.height}"></td>
+      <td th:text="${players.weight}"></td>
+      <td th:text="${players.position}"></td>
+      <td th:text="${players.cname}"></td>
+      <td><a href="javascript:void(0)" th:onclick="|del(${players.pid})|">Delete</a></td>
+    </tr>
+    <input type="button" value="添加" onclick="add()">
+
+    <tr>
+      <td colspan="8">
+        <a th:text="首页" th:href="@{/players/select?currPageNo=1}"></a>
+        <a th:if="${pageBean.currPageNo}!=1" th:href="@{/players/select(currPageNo=${pageBean.currPageNo}-1)}">上一页</a>
+        <a th:if="${pageBean.currPageNo}!=${pageBean.totalPageCount}" th:href="@{/players/select(currPageNo=${pageBean.currPageNo+1})}">下一页</a>
+        <a th:href="@{/players/select(currPageNo=${pageBean.totalPageCount})}">尾页</a>
+    </tr>
+  </table>
+</div>
+</body>
+</html>
